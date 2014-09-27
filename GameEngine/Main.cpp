@@ -1,5 +1,5 @@
 #include <Windows.h>
-#include "windows.h"
+#include "w_main.h"
 
 // Entry point for Windows program
 int WINAPI WinMain(HINSTANCE hInstance,
@@ -8,7 +8,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	int nCmdShow
 	)
 {
-	InitalizeWindow(hInstance, nCmdShow);
-	EnterMessageLoop();
+	W_InitalizeWindow(hInstance, nCmdShow);
+	W_EnterMessageLoop();
 	return 0;
 }

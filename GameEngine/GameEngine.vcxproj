@@ -78,12 +78,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="console.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="windows.cpp" />
+    <ClCompile Include="r_main.cpp" />
+    <ClCompile Include="w_main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="defines.h" />
-    <ClInclude Include="windows.h" />
+    <ClInclude Include="console.h" />
+    <ClInclude Include="r_main.h" />
+    <ClInclude Include="w_main.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
