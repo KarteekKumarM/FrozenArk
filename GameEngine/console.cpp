@@ -1,8 +1,11 @@
+#include "console.h"
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <Windows.h>
 
-void C_Print(char *format, ...)
+// WIP
+void C_Print(short channel, char *format, ...)
 {
 	va_list args;
 	va_start(args, format);
@@ -14,8 +17,8 @@ void C_Print(char *format, ...)
 	va_end(args);
 }
 
-void C_PrintLn(char *format, ...)
+void C_PrintLn(short channel, char *format, ...)
 {
-	C_Print(format);
-	C_Print("\n");
+	C_Print(channel, format);
+	C_Print(channel, "\n");
 }

@@ -51,11 +51,11 @@ void W_InitalizeWindow(HINSTANCE hInstance, int nCmdShow)
 		NULL
 		);
 
-	R_Init();
+	R_Init(hWnd,640,480);
 
 	ShowWindow(hWnd, nCmdShow);
 
-	C_PrintLn("W_InitalizeWindow() complete");
+	C_PrintLn(CON_CHANNEL_SYSTEM,"W_InitalizeWindow() complete");
 }
 
 void W_EnterMessageLoop()
@@ -76,11 +76,13 @@ void W_EnterMessageLoop()
 				break;
 			}
 		}
+
+		R_Frame();
 	}
 }
 
 void W_Shutdown()
 {
 	R_Shutdown();
-	C_PrintLn("R_Shutdown() complete");
+	C_PrintLn(CON_CHANNEL_SYSTEM, "R_Shutdown() complete");
 }
