@@ -28,6 +28,7 @@
 *.out
 *.app
 
+GameEngine/*.cso
 Debug/*
 Release/*
 GameEngine/Debug/*
