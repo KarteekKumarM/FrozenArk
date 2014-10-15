@@ -1,8 +1,12 @@
 #include "w_main.h"
 #include "console.h"
+#include "r_model.h"
+#include "r_camera.h"
 
 #include <d3d11.h>
 #pragma comment(lib, "d3d11.lib")
+#include <DirectXMath.h>
+using namespace DirectX;
 
 static IDXGISwapChain* s_dxgiSwapChain;
 static ID3D11Device* s_d3dDevice;
@@ -219,6 +223,9 @@ bool R_SetupBlending()
 	return SUCCEEDED(result);
 }
 
+//TODO
+XModel *s_model;
+
 void R_Init(HWND hWnd, UINT screenWidth, UINT screenHeight)
 {
 	R_SetupSwapChain(hWnd, screenWidth, screenHeight, false);
@@ -228,7 +235,44 @@ void R_Init(HWND hWnd, UINT screenWidth, UINT screenHeight)
 	R_SetupViewPort(screenWidth, screenHeight);
 	R_SetupBlending();
 
+	R_InitCamera(screenWidth, screenHeight);
+
+	// TODO : Scriptable
+	XVertexShader *vertexShader = new XVertexShader();
+	XPixelShader *pixelShader = new XPixelShader();
+	R_VertexShaderInit(s_d3dDevice, s_d3dDeviceContext, L"model_vs.cso", vertexShader);
+	R_PixelShaderInit(s_d3dDevice, s_d3dDeviceContext, L"model_ps.cso", pixelShader);
+	XModelRenderingResources *renderingResources = new XModelRenderingResources();
+	renderingResources->vertexShader = vertexShader;
+	renderingResources->pixelShader = pixelShader;
+
+	XModel *model = new XModel();
+	model->position = XMVectorSet(-5.0f, 5.0f, 1.0f, 1.0f);
+	model->angles = XMVectorSet(0.5f, 0.0f, 0.0f, 1.0f);
+	model->scale = XMVectorSet(3.0f, 3.0f, 3.0f, 1.0f);
+	model->renderingResources = renderingResources;
+	model->vertexCount = 3;
+	model->indexCount = 3;
+	// TODO
+	model->vertices = new XVertex[3];
+	model->vertices[0] = { XMFLOAT3(-1.0f, -1.0f, 0.0f) };
+	model->vertices[1] = { XMFLOAT3(0.0f, 1.0f, 0.0f) };
+	model->vertices[2] = { XMFLOAT3(1.0f, -1.0f, 0.0f) };
+	model->indices = new WORD[3];
+	model->indices[0] = 0;
+	model->indices[1] = 2;
+	model->indices[2] = 1;
+
+	s_model = model;
+
+	R_InitializeModel(s_d3dDevice, s_d3dDeviceContext, model);
+
 	C_PrintLn(CON_CHANNEL_RENDER, "R_Init() complete");
+}
+
+void R_Draw()
+{
+	R_RenderModel(s_d3dDeviceContext, s_model);
 }
 
 void R_Frame()
@@ -240,13 +284,11 @@ void R_Frame()
 	// clear the depth and stencil buffer
 	s_d3dDeviceContext->ClearDepthStencilView(s_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
+	// make all the draw calls
+	R_Draw();
+
 	// switch the back buffer and the front buffer
 	s_dxgiSwapChain->Present(1, 0);
 
 	C_PrintLn(CON_CHANNEL_RENDER,"R_Frame() complete");
-}
-
-void R_Shutdown()
-{
-	C_PrintLn(CON_CHANNEL_RENDER,"R_Shutdown() complete");
 }

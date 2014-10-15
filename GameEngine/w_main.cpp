@@ -83,6 +83,5 @@ void W_EnterMessageLoop()
 
 void W_Shutdown()
 {
-	R_Shutdown();
 	C_PrintLn(CON_CHANNEL_SYSTEM, "R_Shutdown() complete");
 }

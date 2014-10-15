@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <Windows.h>
 
-// WIP
+// TODO: channels
 void C_Print(short channel, char *format, ...)
 {
 	va_list args;
