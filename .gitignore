@@ -3,6 +3,7 @@
 *.lo
 *.o
 *.obj
+*.log
 
 # Precompiled Headers
 *.gch
@@ -26,3 +27,10 @@
 *.exe
 *.out
 *.app
+
+Debug/*
+Release/*
+GameEngine/Debug/*
+GameEngine/Release/*
+GameEngine.opensdf
+GameEngine.v12.suo
