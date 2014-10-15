@@ -80,13 +80,34 @@
   <ItemGroup>
     <ClCompile Include="console.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="r_camera.cpp" />
     <ClCompile Include="r_main.cpp" />
+    <ClCompile Include="r_model.cpp" />
+    <ClCompile Include="r_shader.cpp" />
     <ClCompile Include="w_main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="console.h" />
+    <ClInclude Include="r_camera.h" />
     <ClInclude Include="r_main.h" />
+    <ClInclude Include="r_model.h" />
+    <ClInclude Include="r_shader.h" />
     <ClInclude Include="w_main.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="model_common.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="model_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Directory)%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
+    <FxCompile Include="model_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Directory)%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
