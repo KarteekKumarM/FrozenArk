@@ -58,7 +58,7 @@ bool R_SetupBackBuffer()
 
 	if (FAILED(result))
 	{
-		C_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to get back buffer from swap chain");
+		Con_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to get back buffer from swap chain");
 		return false;
 	}
 
@@ -89,7 +89,7 @@ bool R_SetupDepthStencilBuffer(UINT screenWidth, UINT screenHeight)
 	hresult = s_d3dDevice->CreateTexture2D(&depthBufferDesc, NULL, &s_depthStencilBuffer);
 
 	if (FAILED(hresult)) {
-		C_PrintLn(CON_CHANNEL_RENDER | CON_CHANNEL_ERROR, "Unable to create depth stencil buffer");
+		Con_PrintLn(CON_CHANNEL_RENDER | CON_CHANNEL_ERROR, "Unable to create depth stencil buffer");
 		return false;
 	}
 
@@ -121,7 +121,7 @@ bool R_SetupDepthStencilBuffer(UINT screenWidth, UINT screenHeight)
 	hresult = s_d3dDevice->CreateDepthStencilState(&depthStencilDesc, &s_depthStencilState);
 
 	if (FAILED(hresult)) {
-		C_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to create depth stencil state");
+		Con_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to create depth stencil state");
 		return false;
 	}
 
@@ -140,7 +140,7 @@ bool R_SetupDepthStencilBuffer(UINT screenWidth, UINT screenHeight)
 	hresult = s_d3dDevice->CreateDepthStencilView(s_depthStencilBuffer, &depthStencilViewDesc, &s_depthStencilView);
 
 	if (FAILED(hresult)) {
-		C_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to create depth stencil view");
+		Con_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to create depth stencil view");
 		return false;
 	}
 
@@ -172,7 +172,7 @@ bool R_SetupRasterizer( bool wireFrameEnabled )
 
 	if (FAILED(result) || s_d3dRasterizerState == 0)
 	{
-		C_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to create rasterize state");
+		Con_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to create rasterize state");
 		return false;
 	}
 
@@ -216,7 +216,7 @@ bool R_SetupBlending()
 	result = s_d3dDevice->CreateBlendState(&blendStateDescription, &s_alphaEnableBlendingState);
 
 	if (FAILED(result)) {
-		C_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to create blend state");
+		Con_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to create blend state");
 		return false;
 	}
 
@@ -267,7 +267,7 @@ void R_Init(HWND hWnd, UINT screenWidth, UINT screenHeight)
 
 	R_InitializeModel(s_d3dDevice, s_d3dDeviceContext, model);
 
-	C_PrintLn(CON_CHANNEL_RENDER, "R_Init() complete");
+	Con_PrintLn(CON_CHANNEL_RENDER, "R_Init() complete");
 }
 
 void R_Draw()
@@ -290,5 +290,5 @@ void R_Frame()
 	// switch the back buffer and the front buffer
 	s_dxgiSwapChain->Present(1, 0);
 
-	C_PrintLn(CON_CHANNEL_RENDER,"R_Frame() complete");
+	Con_PrintLn(CON_CHANNEL_RENDER,"R_Frame() complete");
 }

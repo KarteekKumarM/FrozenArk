@@ -18,7 +18,7 @@ void R_CreateInputLayoutObjectForVertexBuffer(ID3D11Device *d3dDevice, ID3D11Dev
 	HRESULT hr = d3dDevice->CreateInputLayout(ied, sizeof(ied) / sizeof(D3D11_INPUT_ELEMENT_DESC), xVertexShader->common.shaderBlob->GetBufferPointer(), xVertexShader->common.shaderBlob->GetBufferSize(), &layout);
 	if (FAILED(hr))
 	{
-		C_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Failed to create the input layout object");
+		Con_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Failed to create the input layout object");
 		return;
 	}
 
@@ -34,14 +34,14 @@ void R_VertexShaderInit(ID3D11Device *d3dDevice, ID3D11DeviceContext *d3dDeviceC
 	hr = D3DReadFileToBlob(vertexShaderFileName, &vertexShaderBlob);
 	if (FAILED(hr))
 	{
-		C_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to read vertex shader");
+		Con_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to read vertex shader");
 		return;
 	}
 
 	hr = d3dDevice->CreateVertexShader(vertexShaderBlob->GetBufferPointer(), vertexShaderBlob->GetBufferSize(), NULL, &vertexShader);
 	if (FAILED(hr))
 	{
-		C_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to create vertex shader");
+		Con_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to create vertex shader");
 		return;
 	}
 
@@ -62,14 +62,14 @@ void R_PixelShaderInit(ID3D11Device *d3dDevice, ID3D11DeviceContext *d3dDeviceCo
 	hr = D3DReadFileToBlob(pixelShaderFileName, &pixelShaderBlob);
 	if (FAILED(hr))
 	{
-		C_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to read pixel shader");
+		Con_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to read pixel shader");
 		return;
 	}
 
 	hr = d3dDevice->CreatePixelShader(pixelShaderBlob->GetBufferPointer(), pixelShaderBlob->GetBufferSize(), NULL, &pixelShader);
 	if (FAILED(hr))
 	{
-		C_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to create pixel shader");
+		Con_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to create pixel shader");
 		return;
 	}
 

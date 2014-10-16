@@ -59,6 +59,9 @@
     <ClInclude Include="r_shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="model_common.hlsli">
@@ -72,5 +75,10 @@
     <FxCompile Include="model_ps.hlsl">
       <Filter>Shader Files</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="triangle.xmodel">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

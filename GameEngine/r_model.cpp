@@ -24,7 +24,7 @@ void R_LoadIndexBuffer(ID3D11Device *d3dDevice, XModel *model)
 	HRESULT hr = d3dDevice->CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer);
 	if (FAILED(hr))
 	{
-		C_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to create index buffer" );
+		Con_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to create index buffer" );
 	}
 
 	model->renderingResources->indexBuffer = indexBuffer;
@@ -64,7 +64,7 @@ void R_InitConstantBuffer(ID3D11Device *d3dDevice, ID3D11DeviceContext *d3dDevic
 	constantBufferDesc.CPUAccessFlags = 0;
 	HRESULT hr = d3dDevice->CreateBuffer(&constantBufferDesc, NULL, &constantBuffer);
 	if (FAILED(hr)) {
-		C_PrintLn(CON_CHANNEL_RENDER | CON_CHANNEL_ERROR, "Unable to create constant buffer");
+		Con_PrintLn(CON_CHANNEL_RENDER | CON_CHANNEL_ERROR, "Unable to create constant buffer");
 	}
 	renderingResources->constantBuffer = constantBuffer;
 }
