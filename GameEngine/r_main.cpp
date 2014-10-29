@@ -1,7 +1,8 @@
 #include "w_main.h"
 #include "console.h"
-#include "r_model.h"
 #include "r_camera.h"
+#include "am_loaders.h"
+#include "stdio.h"
 
 #include <d3d11.h>
 #pragma comment(lib, "d3d11.lib")
@@ -237,31 +238,22 @@ void R_Init(HWND hWnd, UINT screenWidth, UINT screenHeight)
 
 	R_InitCamera(screenWidth, screenHeight);
 
-	// TODO : Scriptable
+	XModel *model;
+	XModel_LoadFile("triangle.xmodel", &model);
+
 	XVertexShader *vertexShader = new XVertexShader();
 	XPixelShader *pixelShader = new XPixelShader();
-	R_VertexShaderInit(s_d3dDevice, s_d3dDeviceContext, L"model_vs.cso", vertexShader);
-	R_PixelShaderInit(s_d3dDevice, s_d3dDeviceContext, L"model_ps.cso", pixelShader);
+
+	R_VertexShaderInit(s_d3dDevice, s_d3dDeviceContext, model->vertexShaderPath, vertexShader);
+	R_PixelShaderInit(s_d3dDevice, s_d3dDeviceContext, model->pixelShaderPath, pixelShader);
 	XModelRenderingResources *renderingResources = new XModelRenderingResources();
 	renderingResources->vertexShader = vertexShader;
 	renderingResources->pixelShader = pixelShader;
 
-	XModel *model = new XModel();
 	model->position = XMVectorSet(-5.0f, 5.0f, 1.0f, 1.0f);
 	model->angles = XMVectorSet(0.5f, 0.0f, 0.0f, 1.0f);
 	model->scale = XMVectorSet(3.0f, 3.0f, 3.0f, 1.0f);
 	model->renderingResources = renderingResources;
-	model->vertexCount = 3;
-	model->indexCount = 3;
-	// TODO
-	model->vertices = new XVertex[3];
-	model->vertices[0] = { XMFLOAT3(-1.0f, -1.0f, 0.0f) };
-	model->vertices[1] = { XMFLOAT3(0.0f, 1.0f, 0.0f) };
-	model->vertices[2] = { XMFLOAT3(1.0f, -1.0f, 0.0f) };
-	model->indices = new WORD[3];
-	model->indices[0] = 0;
-	model->indices[1] = 2;
-	model->indices[2] = 1;
 
 	s_model = model;
 

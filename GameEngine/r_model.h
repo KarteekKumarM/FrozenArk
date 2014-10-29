@@ -30,6 +30,9 @@ struct XModel
 	unsigned int indexCount;
 	WORD *indices;
 
+	wchar_t *vertexShaderPath;
+	wchar_t *pixelShaderPath;
+
 	XModelRenderingResources *renderingResources;
 };
 
