@@ -93,6 +93,15 @@ void R_UpdateConstantBuffer(ID3D11DeviceContext *d3dDeviceContext, XModel *model
 
 void R_InitializeModel(ID3D11Device *d3dDevice, ID3D11DeviceContext *d3dDeviceContext, XModel *model)
 {
+	XVertexShader *vertexShader = new XVertexShader();
+	XPixelShader *pixelShader = new XPixelShader();
+	R_VertexShaderInit(d3dDevice, d3dDeviceContext, model->vertexShaderPath, vertexShader);
+	R_PixelShaderInit(d3dDevice, d3dDeviceContext, model->pixelShaderPath, pixelShader);
+	XModelRenderingResources *renderingResources = new XModelRenderingResources();
+	renderingResources->vertexShader = vertexShader;
+	renderingResources->pixelShader = pixelShader;
+	model->renderingResources = renderingResources;
+
 	R_InitConstantBuffer(d3dDevice, d3dDeviceContext, model);
 	R_LoadVertexBuffer(d3dDevice, model);
 	R_LoadIndexBuffer(d3dDevice, model);

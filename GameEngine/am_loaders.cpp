@@ -3,7 +3,7 @@
 #include "am_loaders.h"
 #include "stdio.h"
 
-void XModel_LoadFile(const char *filename, XModel **model)
+void XModel_LoadXModelFromFile(const char *filename, XModel **model)
 {
 	// --------------- read contents of file
 	char *contents;
@@ -46,26 +46,28 @@ void XModel_LoadFile(const char *filename, XModel **model)
 		if (strcmp(xmodelChildIterator->data, "vertices") == 0)
 		{
 			unsigned int vertexCount = 0;
-			XML_Element *vertexIterator = xmodelChildIterator->child;
-			while (vertexIterator != NULL)
+			XML_ElementAttribute *vertexAttributeIterator = xmodelChildIterator->attributes;
+			while (vertexAttributeIterator != NULL)
 			{
-				vertexIterator = vertexIterator->sibling;
-				vertexCount++;
+				if (strcmp(vertexAttributeIterator->key, "count") == 0)
+				{
+					vertexCount = atoi(vertexAttributeIterator->value);
+				}
+				vertexAttributeIterator = vertexAttributeIterator->next;
 			}
+
+			assert(vertexCount > 0);
+
+			const char *vertexStringIterator = (char *)xmodelChildIterator->child->data;
 
 			newModel->vertices = new XVertex[vertexCount];
 			newModel->vertexCount = vertexCount;
-			vertexIterator = xmodelChildIterator->child;
 			for (unsigned int i = 0; i < vertexCount; i++)
 			{
-				assert(strcmp(vertexIterator->data, "vertex") == 0);
-				const char *vertexString = vertexIterator->child->data;
-
 				char floatStringBuffer[256];
 				unsigned int bufferIndex = 0;
 				float x, y, z;
 
-				char *vertexStringIterator = (char *)vertexString;
 				char *error;
 
 				assert(*vertexStringIterator == '(');
@@ -101,29 +103,47 @@ void XModel_LoadFile(const char *filename, XModel **model)
 
 				newModel->vertices[i].position = XMFLOAT3(x, y, z);
 
-				vertexIterator = vertexIterator->sibling;
+				assert(*vertexStringIterator == ')');
+				vertexStringIterator++;
+				if (i != vertexCount - 1)
+				{
+					assert(*vertexStringIterator == ',');
+					vertexStringIterator++;
+				}
 			}
 		}
 		else if (strcmp(xmodelChildIterator->data, "indices") == 0)
 		{
 			unsigned int indexCount = 0;
-			XML_Element *indexIterator = xmodelChildIterator->child;
-			while (indexIterator != NULL)
+			XML_ElementAttribute *indexAttributeIterator = xmodelChildIterator->attributes;
+			while (indexAttributeIterator != NULL)
 			{
-				indexIterator = indexIterator->sibling;
-				indexCount++;
+				if (strcmp(indexAttributeIterator->key, "count") == 0)
+				{
+					indexCount = atoi(indexAttributeIterator->value);
+				}
+				indexAttributeIterator = indexAttributeIterator->next;
 			}
 
 			newModel->indices = new WORD[indexCount];
 			newModel->indexCount = indexCount;
-			indexIterator = xmodelChildIterator->child;
+			char *indexStringIterator = (char *)xmodelChildIterator->child->data;
 			for (unsigned int i = 0; i < indexCount; i++)
 			{
-				assert(strcmp(indexIterator->data, "index") == 0);
-				const char *indexString = indexIterator->child->data;
-				newModel->indices[i] = atoi(indexString);
+				char intStringBuffer[512];
+				unsigned int intStringBufferIndex = 0;
 
-				indexIterator = indexIterator->sibling;
+				while (*indexStringIterator != ',' && *indexStringIterator != '\0')
+				{
+					intStringBuffer[intStringBufferIndex++] = *indexStringIterator;
+					indexStringIterator++;
+				}
+
+				assert(intStringBufferIndex > 0);
+				assert((i < indexCount - 1 && *indexStringIterator == ',') || (*indexStringIterator == '\0'));
+				indexStringIterator++;
+
+				newModel->indices[i] = atoi(intStringBuffer);
 			}
 		}
 		xmodelChildIterator = xmodelChildIterator->sibling;

@@ -239,25 +239,13 @@ void R_Init(HWND hWnd, UINT screenWidth, UINT screenHeight)
 	R_InitCamera(screenWidth, screenHeight);
 
 	XModel *model;
-	XModel_LoadFile("triangle.xmodel", &model);
-
-	XVertexShader *vertexShader = new XVertexShader();
-	XPixelShader *pixelShader = new XPixelShader();
-
-	R_VertexShaderInit(s_d3dDevice, s_d3dDeviceContext, model->vertexShaderPath, vertexShader);
-	R_PixelShaderInit(s_d3dDevice, s_d3dDeviceContext, model->pixelShaderPath, pixelShader);
-	XModelRenderingResources *renderingResources = new XModelRenderingResources();
-	renderingResources->vertexShader = vertexShader;
-	renderingResources->pixelShader = pixelShader;
-
+	XModel_LoadXModelFromFile("cube.xmodel", &model);
+	R_InitializeModel(s_d3dDevice, s_d3dDeviceContext, model);
 	model->position = XMVectorSet(-5.0f, 5.0f, 1.0f, 1.0f);
 	model->angles = XMVectorSet(0.5f, 0.0f, 0.0f, 1.0f);
 	model->scale = XMVectorSet(3.0f, 3.0f, 3.0f, 1.0f);
-	model->renderingResources = renderingResources;
 
 	s_model = model;
-
-	R_InitializeModel(s_d3dDevice, s_d3dDeviceContext, model);
 
 	Con_PrintLn(CON_CHANNEL_RENDER, "R_Init() complete");
 }

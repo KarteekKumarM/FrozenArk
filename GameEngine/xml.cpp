@@ -303,7 +303,7 @@ unsigned int XML_ReadFile(const char *filename, char **contents)
 	FILE *xmlFileHandle;
 	fopen_s(&xmlFileHandle, filename, "r");
 	assert(xmlFileHandle != NULL);
-	*contents = (char *)malloc(sizeof(char*) * MAX_XML_FILE_SIZE);
+	*contents = (char *)malloc(sizeof(char) * MAX_XML_FILE_SIZE);
 	unsigned int contentLength = 0;
 	for (unsigned int i = 0; i < MAX_XML_FILE_SIZE; i++)
 	{
