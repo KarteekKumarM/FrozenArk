@@ -28,3 +28,30 @@ XMMATRIX R_GetViewMatrix()
 {
 	return DirectX::XMMatrixLookAtLH(s_eye, s_lookat, s_up);
 }
+
+XMVECTOR R_GetNormalizedViewDirection()
+{
+	return XMVector3Normalize(XMVectorSubtract(s_lookat, s_eye));
+}
+
+void R_MoveCamera(XMVECTOR moveDelta)
+{
+	s_eye = XMVectorAdd(s_eye, moveDelta);
+	s_lookat = XMVectorAdd(s_lookat, moveDelta);
+}
+
+void R_MoveCameraInViewDirection(float moveUnits)
+{
+	R_MoveCamera(R_GetNormalizedViewDirection() * moveUnits);
+}
+
+void R_MoveCameraInUpDirection(float moveUnits)
+{
+	R_MoveCamera(XMVector3Normalize(s_up) * moveUnits);
+}
+
+void R_MoveCameraInRightDirection(float moveUnits)
+{
+	XMVECTOR rightDirection = XMVector3Cross(R_GetNormalizedViewDirection(), s_up) * -1;
+	R_MoveCamera(rightDirection * moveUnits);
+}
