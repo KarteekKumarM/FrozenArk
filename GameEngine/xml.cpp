@@ -310,7 +310,7 @@ unsigned int XML_ReadFile(const char *filename, char **contents)
 		int c = getc(xmlFileHandle);
 		if (c == EOF)
 		{
-			contents[i] = '\0';
+			(*contents)[i] = '\0';
 			contentLength = i;
 			break;
 		}
