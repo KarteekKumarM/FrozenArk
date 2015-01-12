@@ -36,5 +36,5 @@ struct XModel
 	XModelRenderingResources *renderingResources;
 };
 
-void R_InitializeModel(ID3D11Device *d3dDevice, ID3D11DeviceContext *d3dDeviceContext, XModel *model);
-void R_RenderModel(ID3D11DeviceContext *d3dDeviceContext, XModel *model);
+void R_InitializeModel( ID3D11Device *d3dDevice, ID3D11DeviceContext *d3dDeviceContext, XModel *model );
+void R_RenderModel( ID3D11DeviceContext *d3dDeviceContext, XModel *model );

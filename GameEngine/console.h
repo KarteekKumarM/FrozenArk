@@ -9,4 +9,4 @@
 
 void Con_Init();
 void Con_Shutdown();
-void Con_PrintLn(short channel, char *format, ...);
+void Con_PrintLn( short channel, char *format, ... );

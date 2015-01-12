@@ -15,18 +15,18 @@ char *s_xmlTokenTypeDescription[XML_TOKEN_TYPE_COUNT] =
 	"tag_attib"
 };
 
-void XML_TokenList_Add(XML_TokenList *list, XML_TokenType type, char *data)
+void XML_TokenList_Add( XML_TokenList *list, XML_TokenType type, char *data )
 {
-	XML_Token *token = &list->tokens[(list->count)++];
+	XML_Token *token = &list->tokens[( list->count )++];
 	token->type = type;
 	token->data = data;
 }
 
-XML_TokenList* XML_Tokenize(const char *contents, unsigned int length)
+XML_TokenList* XML_Tokenize( const char *contents, unsigned int length )
 {
 	LinkedListNode *charStack = NULL;
 	char *hashChar = "#";
-	Stack_PushChar(hashChar, &charStack);
+	Stack_PushChar( hashChar, &charStack );
 	XML_TokenList *tokenList = new XML_TokenList();
 
 	const unsigned int bufferMaxLength = 512;
@@ -35,102 +35,102 @@ XML_TokenList* XML_Tokenize(const char *contents, unsigned int length)
 
 	XML_TokenType tokenType = XML_TOKEN_TAG_DATA;
 
-	for (unsigned int i = 0; i <= length; i++)
+	for ( unsigned int i = 0; i <= length; i++ )
 	{
 		char ch = contents[i];
-		char charStackTop = *Stack_PeekChar(charStack);
+		char charStackTop = *Stack_PeekChar( charStack );
 
-		if (charStackTop == '<')
+		if ( charStackTop == '<' )
 		{
-			assert(tokenType == XML_TOKEN_TAG_OPEN || tokenType == XML_TOKEN_TAG_CLOSE);
-			assert(ch != '<');
+			assert( tokenType == XML_TOKEN_TAG_OPEN || tokenType == XML_TOKEN_TAG_CLOSE );
+			assert( ch != '<' );
 
-			if (ch == '/')
+			if ( ch == '/' )
 			{
-				assert(tempTokenLength == 0);
+				assert( tempTokenLength == 0 );
 				tokenType = XML_TOKEN_TAG_CLOSE;
 			}
-			else if (ch == '>' || ch == ' ')
+			else if ( ch == '>' || ch == ' ' )
 			{
 				// copy 
 				tempToken[tempTokenLength++] = '\0';
-				char *tagName = (char *)malloc(sizeof(char) * tempTokenLength);
-				strcpy_s(tagName, tempTokenLength, tempToken);
+				char *tagName = ( char * ) malloc( sizeof( char ) * tempTokenLength );
+				strcpy_s( tagName, tempTokenLength, tempToken );
 
 				// add to list
-				XML_TokenList_Add(tokenList, tokenType, tagName);
+				XML_TokenList_Add( tokenList, tokenType, tagName );
 
 				// reset
-				char *popCh = Stack_PopChar(&charStack);
-				free(popCh);
+				char *popCh = Stack_PopChar( &charStack );
+				free( popCh );
 				tempTokenLength = 0;
 
 				// attribute list
-				if (ch == ' ')
+				if ( ch == ' ' )
 				{
 					// attrib list
-					char *pushChar = (char *)malloc(sizeof(char));
+					char *pushChar = ( char * ) malloc( sizeof( char ) );
 					*pushChar = '=';	// means reading attrib list
 					tokenType = XML_TOKEN_TAG_ATTRIB;
-					Stack_PushChar(pushChar, &charStack);
+					Stack_PushChar( pushChar, &charStack );
 				}
 			}
 			else
 			{
 				tempToken[tempTokenLength++] = ch;
-				assert(tempTokenLength < bufferMaxLength);
+				assert( tempTokenLength < bufferMaxLength );
 			}
 		}
-		else if (charStackTop == '=')
+		else if ( charStackTop == '=' )
 		{
-			assert(tokenType == XML_TOKEN_TAG_ATTRIB);
-			if (ch == '>' || ch == ' ')
+			assert( tokenType == XML_TOKEN_TAG_ATTRIB );
+			if ( ch == '>' || ch == ' ' )
 			{
 				// key=value is in token
 				// split them and add them into the token list
 				// copy 
 				tempToken[tempTokenLength++] = '\0';
-				char *attribKVP = (char *)malloc(sizeof(char) * tempTokenLength);
-				strcpy_s(attribKVP, tempTokenLength, tempToken);
+				char *attribKVP = ( char * ) malloc( sizeof( char ) * tempTokenLength );
+				strcpy_s( attribKVP, tempTokenLength, tempToken );
 
 				// add to list
-				XML_TokenList_Add(tokenList, tokenType, attribKVP);
+				XML_TokenList_Add( tokenList, tokenType, attribKVP );
 
 				// reset
 				tempTokenLength = 0;
 
-				if (ch == '>')
+				if ( ch == '>' )
 				{
 					// no more attributes
-					char *popCh = Stack_PopChar(&charStack);
-					free(popCh);
+					char *popCh = Stack_PopChar( &charStack );
+					free( popCh );
 				}
 			}
 			else
 			{
 				tempToken[tempTokenLength++] = ch;
-				assert(tempTokenLength < bufferMaxLength);
+				assert( tempTokenLength < bufferMaxLength );
 			}
 		}
 		else
 		{
-			assert(ch != '>');
+			assert( ch != '>' );
 
-			if (ch == ' ' || ch == '\n' || ch == '\t')
+			if ( ch == ' ' || ch == '\n' || ch == '\t' )
 			{
 				// do nothing - white space ignores
 			}
-			else if (ch == '<')
+			else if ( ch == '<' )
 			{
-				if (tempTokenLength > 0)
+				if ( tempTokenLength > 0 )
 				{
 					// push token into token stack
 					tempToken[tempTokenLength++] = '\0';
-					char *tagContent = (char *)malloc(sizeof(char) * tempTokenLength);
-					strcpy_s(tagContent, tempTokenLength, tempToken);
+					char *tagContent = ( char * ) malloc( sizeof( char ) * tempTokenLength );
+					strcpy_s( tagContent, tempTokenLength, tempToken );
 
 					// stack changes
-					XML_TokenList_Add(tokenList, tokenType, tagContent);
+					XML_TokenList_Add( tokenList, tokenType, tagContent );
 
 					// reset
 					tempTokenLength = 0;
@@ -138,36 +138,36 @@ XML_TokenList* XML_Tokenize(const char *contents, unsigned int length)
 
 				tokenType = XML_TOKEN_TAG_OPEN;
 
-				char *pushChar = (char *)malloc(sizeof(char));
+				char *pushChar = ( char * ) malloc( sizeof( char ) );
 				*pushChar = ch;
-				Stack_PushChar(pushChar, &charStack);
+				Stack_PushChar( pushChar, &charStack );
 			}
 			else
 			{
 				tokenType = XML_TOKEN_TAG_DATA;
 				tempToken[tempTokenLength++] = ch;
-				assert(tempTokenLength < bufferMaxLength);
+				assert( tempTokenLength < bufferMaxLength );
 			}
 		}
 	}
 	return tokenList;
 }
 
-void XML_Element_Add_Child(XML_Element *element, XML_Element *child)
+void XML_Element_Add_Child( XML_Element *element, XML_Element *child )
 {
-	assert(child != NULL);
-	assert(element != NULL);
+	assert( child != NULL );
+	assert( element != NULL );
 
 	child->parent = element;
 
-	if (element->child == NULL)
+	if ( element->child == NULL )
 	{
 		element->child = child;
 	}
 	else
 	{
 		XML_Element *lastExistingChild = element->child;
-		while (lastExistingChild->sibling != NULL)
+		while ( lastExistingChild->sibling != NULL )
 		{
 			lastExistingChild = lastExistingChild->sibling;
 		}
@@ -184,104 +184,104 @@ It is a Depth-first traversal
 3.Push close marker for this element on the Stack
 4.Push children of this element onto the stack
 **/
-XML_Element* XML_Parse(XML_TokenList* tokenList)
+XML_Element* XML_Parse( XML_TokenList* tokenList )
 {
 	XML_Element *root = new XML_Element();
 	root->data = "##";
 	XML_Element *originalDummyRoot = root;
 
-	for (unsigned int i = 0; i < tokenList->count; i++)
+	for ( unsigned int i = 0; i < tokenList->count; i++ )
 	{
 		XML_Token *token = &tokenList->tokens[i];
-		if (token->type == XML_TOKEN_TAG_OPEN)
+		if ( token->type == XML_TOKEN_TAG_OPEN )
 		{
 			// make a new element
 			XML_Element *elem = new XML_Element();
 			elem->data = token->data;
 
 			// add it as child to current root
-			XML_Element_Add_Child(root, elem);
+			XML_Element_Add_Child( root, elem );
 
 			// make new element the root
 			root = elem;
 		}
-		else if (token->type == XML_TOKEN_TAG_ATTRIB)
+		else if ( token->type == XML_TOKEN_TAG_ATTRIB )
 		{
-			char *attrib_key = (char *)malloc(sizeof(char) * 256);
-			char *attrib_value = (char *)malloc(sizeof(char) * 256);
+			char *attrib_key = ( char * ) malloc( sizeof( char ) * 256 );
+			char *attrib_value = ( char * ) malloc( sizeof( char ) * 256 );
 			unsigned int attrib_i = 0;
 
 			char *it = token->data;
 
-			while (*it != '=')
+			while ( *it != '=' )
 			{
-				assert(it != '\0');
+				assert( it != '\0' );
 				attrib_key[attrib_i++] = *it;
 				it++;
 			}
 
-			assert(attrib_i > 0);
+			assert( attrib_i > 0 );
 			attrib_key[attrib_i++] = '\0';
 			attrib_i = 0;
 
 			it++;
-			assert(*it == '\"');
+			assert( *it == '\"' );
 			it++;
 
-			while (*it != '\"')
+			while ( *it != '\"' )
 			{
-				assert(it != '\0');
+				assert( it != '\0' );
 				attrib_value[attrib_i++] = *it;
 				it++;
 			}
 
-			assert(attrib_i > 0);
+			assert( attrib_i > 0 );
 			attrib_value[attrib_i++] = '\0';
 
 			it++;
-			assert(*it == '\0');
+			assert( *it == '\0' );
 
 			XML_ElementAttribute *attribute = new XML_ElementAttribute();
 			attribute->key = attrib_key;
 			attribute->value = attrib_value;
 
-			if (root->attributes == NULL)
+			if ( root->attributes == NULL )
 			{
 				root->attributes = attribute;
 			}
 			else
 			{
 				XML_ElementAttribute *attributeIterator = root->attributes;
-				while (attributeIterator->next != NULL)
+				while ( attributeIterator->next != NULL )
 				{
 					attributeIterator = attribute->next;
 				}
 				attributeIterator->next = attribute;
 			}
 		}
-		else if (token->type == XML_TOKEN_TAG_CLOSE)
+		else if ( token->type == XML_TOKEN_TAG_CLOSE )
 		{
 			// set root as its own parent
-			assert(root->parent != NULL);
-			assert(strcmp(root->data, token->data) == 0);
+			assert( root->parent != NULL );
+			assert( strcmp( root->data, token->data ) == 0 );
 			root = root->parent;
 		}
-		else if (token->type == XML_TOKEN_TAG_DATA)
+		else if ( token->type == XML_TOKEN_TAG_DATA )
 		{
 			// make a new element
 			XML_Element *elem = new XML_Element();
 			elem->data = token->data;
 
 			// add it as child to current root
-			XML_Element_Add_Child(root, elem);
+			XML_Element_Add_Child( root, elem );
 		}
 		else
 		{
-			assert(false);
+			assert( false );
 		}
 	}
 
-	assert(originalDummyRoot == root);
+	assert( originalDummyRoot == root );
 
 	root = root->child;
 	delete originalDummyRoot;
@@ -289,44 +289,44 @@ XML_Element* XML_Parse(XML_TokenList* tokenList)
 	return root;
 }
 
-void XMl_DebugPrintTokens(XML_TokenList *tokenList)
+void XMl_DebugPrintTokens( XML_TokenList *tokenList )
 {
-	for (unsigned int i = 0; i < tokenList->count; i++)
+	for ( unsigned int i = 0; i < tokenList->count; i++ )
 	{
 		XML_Token *token = &tokenList->tokens[i];
-		printf("%s %s\n", s_xmlTokenTypeDescription[token->type], token->data);
+		printf( "%s %s\n", s_xmlTokenTypeDescription[token->type], token->data );
 	}
 }
 
-unsigned int XML_ReadFile(const char *filename, char **contents)
+unsigned int XML_ReadFile( const char *filename, char **contents )
 {
 	FILE *xmlFileHandle;
-	fopen_s(&xmlFileHandle, filename, "r");
-	assert(xmlFileHandle != NULL);
-	*contents = (char *)malloc(sizeof(char) * MAX_XML_FILE_SIZE);
+	fopen_s( &xmlFileHandle, filename, "r" );
+	assert( xmlFileHandle != NULL );
+	*contents = ( char * ) malloc( sizeof( char ) * MAX_XML_FILE_SIZE );
 	unsigned int contentLength = 0;
-	for (unsigned int i = 0; i < MAX_XML_FILE_SIZE; i++)
+	for ( unsigned int i = 0; i < MAX_XML_FILE_SIZE; i++ )
 	{
-		int c = getc(xmlFileHandle);
-		if (c == EOF)
+		int c = getc( xmlFileHandle );
+		if ( c == EOF )
 		{
-			(*contents)[i] = '\0';
+			( *contents )[i] = '\0';
 			contentLength = i;
 			break;
 		}
-		(*contents)[i] = c;
+		( *contents )[i] = c;
 	}
 	return contentLength;
 }
 
-void XML_Element_Free(XML_Element **elem)
+void XML_Element_Free( XML_Element **elem )
 {
-	XML_Element *childIt = (*elem)->child;
-	while (childIt != NULL)
+	XML_Element *childIt = ( *elem )->child;
+	while ( childIt != NULL )
 	{
 		XML_Element *temp = childIt;
 		childIt = childIt->sibling;
-		XML_Element_Free(&temp);
+		XML_Element_Free( &temp );
 	}
 	delete elem;
 }

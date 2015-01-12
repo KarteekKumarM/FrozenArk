@@ -78,22 +78,40 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="am_loaders.cpp" />
+    <ClCompile Include="common.cpp" />
     <ClCompile Include="console.cpp" />
+    <ClCompile Include="c_time.cpp" />
+    <ClCompile Include="g_input.cpp" />
+    <ClCompile Include="g_main.cpp" />
+    <ClCompile Include="g_player.cpp" />
+    <ClCompile Include="linkedlist.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="r_camera.cpp" />
     <ClCompile Include="r_main.cpp" />
     <ClCompile Include="r_model.cpp" />
     <ClCompile Include="r_shader.cpp" />
+    <ClCompile Include="stack.cpp" />
     <ClCompile Include="w_main.cpp" />
+    <ClCompile Include="xml.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="am_loaders.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="console.h" />
+    <ClInclude Include="c_time.h" />
+    <ClInclude Include="defines.h" />
+    <ClInclude Include="g_input.h" />
+    <ClInclude Include="g_main.h" />
+    <ClInclude Include="g_player.h" />
+    <ClInclude Include="linkedlist.h" />
     <ClInclude Include="r_camera.h" />
     <ClInclude Include="r_main.h" />
     <ClInclude Include="r_model.h" />
     <ClInclude Include="r_shader.h" />
+    <ClInclude Include="stack.h" />
     <ClInclude Include="w_main.h" />
+    <ClInclude Include="xml.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="model_common.hlsli" />

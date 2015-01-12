@@ -12,5 +12,5 @@
 #define WIN_WIDTH 640
 #define WIN_HEIGHT 480
 
-void W_InitalizeWindow(HINSTANCE hInstance, int nCmdShow);
+void W_InitalizeWindow( HINSTANCE hInstance, int nCmdShow );
 void W_EnterMessageLoop();

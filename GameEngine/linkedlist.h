@@ -6,4 +6,4 @@ struct LinkedListNode
 	LinkedListNode *next;
 };
 
-LinkedListNode* LinkedListNode_Make(void *data);
+LinkedListNode* LinkedListNode_Make( void *data );

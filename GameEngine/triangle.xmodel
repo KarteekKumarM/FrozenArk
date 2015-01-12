@@ -1,12 +1,12 @@
 <xmodel vs="model_vs.cso" ps="model_ps.cso">
   <vertices count="3">
-      (-1.0, -1.0, 0.0),
-      (0.0, 1.0, 0.0),
-      (1.0, -1.0, 0.0)
+    (-1.0, -1.0, 0.0),
+    (0.0, 1.0, 0.0),
+    (1.0, -1.0, 0.0)
   </vertices>
   <indices count="3">
-      0,
-      2,
-      1
+    0,
+    2,
+    1
   </indices>
 </xmodel>

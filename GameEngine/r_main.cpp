@@ -20,11 +20,11 @@ static ID3D11DepthStencilView* s_depthStencilView;
 static ID3D11BlendState* s_alphaEnableBlendingState;
 static ID3D11RasterizerState* s_d3dRasterizerState;
 
-void R_SetupSwapChain(HWND hWnd, UINT screenWidth, UINT screenHeight, bool shouldFullscreen)
+void R_SetupSwapChain( HWND hWnd, UINT screenWidth, UINT screenHeight, bool shouldFullscreen )
 {
 	// struct that holds info about swap chain
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
-	ZeroMemory(&swapChainDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
+	ZeroMemory( &swapChainDesc, sizeof( DXGI_SWAP_CHAIN_DESC ) );
 	swapChainDesc.BufferCount = 1; // one back buffer
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // 32-bit color
 	swapChainDesc.BufferDesc.Width = screenWidth;
@@ -36,7 +36,7 @@ void R_SetupSwapChain(HWND hWnd, UINT screenWidth, UINT screenHeight, bool shoul
 	swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;	// allow switching to and from full screen
 
 	// create the device, swap chain and device context
-	D3D11CreateDeviceAndSwapChain(NULL,
+	D3D11CreateDeviceAndSwapChain( NULL,
 		D3D_DRIVER_TYPE_HARDWARE,
 		NULL,
 		NULL,
@@ -47,7 +47,7 @@ void R_SetupSwapChain(HWND hWnd, UINT screenWidth, UINT screenHeight, bool shoul
 		&s_dxgiSwapChain,
 		&s_d3dDevice,
 		NULL,
-		&s_d3dDeviceContext);
+		&s_d3dDeviceContext );
 }
 
 bool R_SetupBackBuffer()
@@ -55,26 +55,26 @@ bool R_SetupBackBuffer()
 	HRESULT result = S_OK;
 
 	// get address of the back buffer
-	result = s_dxgiSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&s_BackBuffer);
+	result = s_dxgiSwapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), ( LPVOID* ) &s_BackBuffer );
 
-	if (FAILED(result))
+	if ( FAILED( result ) )
 	{
-		Con_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to get back buffer from swap chain");
+		Con_PrintLn( CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to get back buffer from swap chain" );
 		return false;
 	}
 
 	// use the back buffer address as the render target
-	s_d3dDevice->CreateRenderTargetView(s_BackBuffer, NULL, &s_d3dBackBufferRenderTargetView);
+	s_d3dDevice->CreateRenderTargetView( s_BackBuffer, NULL, &s_d3dBackBufferRenderTargetView );
 
-	return SUCCEEDED(result);
+	return SUCCEEDED( result );
 }
 
-bool R_SetupDepthStencilBuffer(UINT screenWidth, UINT screenHeight)
+bool R_SetupDepthStencilBuffer( UINT screenWidth, UINT screenHeight )
 {
 	HRESULT hresult = S_OK;
 
 	D3D11_TEXTURE2D_DESC depthBufferDesc;
-	ZeroMemory(&depthBufferDesc, sizeof(D3D11_TEXTURE2D_DESC));
+	ZeroMemory( &depthBufferDesc, sizeof( D3D11_TEXTURE2D_DESC ) );
 	depthBufferDesc.Width = screenWidth;
 	depthBufferDesc.Height = screenHeight;
 	depthBufferDesc.MipLevels = 1;
@@ -87,16 +87,16 @@ bool R_SetupDepthStencilBuffer(UINT screenWidth, UINT screenHeight)
 	depthBufferDesc.CPUAccessFlags = 0;
 	depthBufferDesc.MiscFlags = 0;
 
-	hresult = s_d3dDevice->CreateTexture2D(&depthBufferDesc, NULL, &s_depthStencilBuffer);
+	hresult = s_d3dDevice->CreateTexture2D( &depthBufferDesc, NULL, &s_depthStencilBuffer );
 
-	if (FAILED(hresult)) {
-		Con_PrintLn(CON_CHANNEL_RENDER | CON_CHANNEL_ERROR, "Unable to create depth stencil buffer");
+	if ( FAILED( hresult ) ) {
+		Con_PrintLn( CON_CHANNEL_RENDER | CON_CHANNEL_ERROR, "Unable to create depth stencil buffer" );
 		return false;
 	}
 
 	// Initialize the description of the stencil state.
 	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
-	ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
+	ZeroMemory( &depthStencilDesc, sizeof( depthStencilDesc ) );
 
 	// Set up the description of the stencil state.
 	depthStencilDesc.DepthEnable = true;
@@ -119,18 +119,18 @@ bool R_SetupDepthStencilBuffer(UINT screenWidth, UINT screenHeight)
 	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-	hresult = s_d3dDevice->CreateDepthStencilState(&depthStencilDesc, &s_depthStencilState);
+	hresult = s_d3dDevice->CreateDepthStencilState( &depthStencilDesc, &s_depthStencilState );
 
-	if (FAILED(hresult)) {
-		Con_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to create depth stencil state");
+	if ( FAILED( hresult ) ) {
+		Con_PrintLn( CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to create depth stencil state" );
 		return false;
 	}
 
-	s_d3dDeviceContext->OMSetDepthStencilState(s_depthStencilState, 1);
+	s_d3dDeviceContext->OMSetDepthStencilState( s_depthStencilState, 1 );
 
 	// Initialize the depth stencil view.
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
-	ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
+	ZeroMemory( &depthStencilViewDesc, sizeof( depthStencilViewDesc ) );
 
 	// Set up the depth stencil view description.
 	depthStencilViewDesc.Format = depthBufferDesc.Format;
@@ -138,16 +138,16 @@ bool R_SetupDepthStencilBuffer(UINT screenWidth, UINT screenHeight)
 	depthStencilViewDesc.Texture2D.MipSlice = 0;
 
 	// Create the depth stencil view.
-	hresult = s_d3dDevice->CreateDepthStencilView(s_depthStencilBuffer, &depthStencilViewDesc, &s_depthStencilView);
+	hresult = s_d3dDevice->CreateDepthStencilView( s_depthStencilBuffer, &depthStencilViewDesc, &s_depthStencilView );
 
-	if (FAILED(hresult)) {
-		Con_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to create depth stencil view");
+	if ( FAILED( hresult ) ) {
+		Con_PrintLn( CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to create depth stencil view" );
 		return false;
 	}
 
-	s_d3dDeviceContext->OMSetRenderTargets(1, &s_d3dBackBufferRenderTargetView, s_depthStencilView);
+	s_d3dDeviceContext->OMSetRenderTargets( 1, &s_d3dBackBufferRenderTargetView, s_depthStencilView );
 
-	return SUCCEEDED(hresult);
+	return SUCCEEDED( hresult );
 }
 
 bool R_SetupRasterizer( bool wireFrameEnabled )
@@ -156,7 +156,7 @@ bool R_SetupRasterizer( bool wireFrameEnabled )
 
 	// setup how the polygons will be drawn
 	D3D11_RASTERIZER_DESC rasterizerDesc;
-	ZeroMemory(&rasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
+	ZeroMemory( &rasterizerDesc, sizeof( D3D11_RASTERIZER_DESC ) );
 	rasterizerDesc.AntialiasedLineEnable = true;
 	rasterizerDesc.CullMode = D3D11_CULL_FRONT;
 	rasterizerDesc.DepthBias = 0;
@@ -169,30 +169,30 @@ bool R_SetupRasterizer( bool wireFrameEnabled )
 	rasterizerDesc.SlopeScaledDepthBias = 0.0f;
 
 	s_d3dRasterizerState = 0;
-	result = s_d3dDevice->CreateRasterizerState(&rasterizerDesc, &s_d3dRasterizerState);
+	result = s_d3dDevice->CreateRasterizerState( &rasterizerDesc, &s_d3dRasterizerState );
 
-	if (FAILED(result) || s_d3dRasterizerState == 0)
+	if ( FAILED( result ) || s_d3dRasterizerState == 0 )
 	{
-		Con_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to create rasterize state");
+		Con_PrintLn( CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to create rasterize state" );
 		return false;
 	}
 
-	s_d3dDeviceContext->RSSetState(s_d3dRasterizerState);
+	s_d3dDeviceContext->RSSetState( s_d3dRasterizerState );
 
-	return SUCCEEDED(result);
+	return SUCCEEDED( result );
 }
 
-void R_SetupViewPort(UINT screenWidth, UINT screenHeight)
+void R_SetupViewPort( UINT screenWidth, UINT screenHeight )
 {
 	D3D11_VIEWPORT viewPort;
-	ZeroMemory(&viewPort, sizeof(D3D11_VIEWPORT));
+	ZeroMemory( &viewPort, sizeof( D3D11_VIEWPORT ) );
 	viewPort.TopLeftX = 0;
 	viewPort.TopLeftY = 0;
-	viewPort.Width = (FLOAT)screenWidth;
-	viewPort.Height = (FLOAT)screenHeight;
+	viewPort.Width = ( FLOAT ) screenWidth;
+	viewPort.Height = ( FLOAT ) screenHeight;
 	viewPort.MinDepth = 0.0f;
 	viewPort.MaxDepth = 1.0f;
-	s_d3dDeviceContext->RSSetViewports(1, &viewPort);
+	s_d3dDeviceContext->RSSetViewports( 1, &viewPort );
 }
 
 bool R_SetupBlending()
@@ -201,7 +201,7 @@ bool R_SetupBlending()
 
 	D3D11_BLEND_DESC blendStateDescription;
 	// Clear the blend state description.
-	ZeroMemory(&blendStateDescription, sizeof(D3D11_BLEND_DESC));
+	ZeroMemory( &blendStateDescription, sizeof( D3D11_BLEND_DESC ) );
 
 	// Create an alpha enabled blend state description.
 	blendStateDescription.RenderTarget[0].BlendEnable = TRUE;
@@ -214,61 +214,61 @@ bool R_SetupBlending()
 	blendStateDescription.RenderTarget[0].RenderTargetWriteMask = 0x0f;
 
 	// Create the blend state using the description.
-	result = s_d3dDevice->CreateBlendState(&blendStateDescription, &s_alphaEnableBlendingState);
+	result = s_d3dDevice->CreateBlendState( &blendStateDescription, &s_alphaEnableBlendingState );
 
-	if (FAILED(result)) {
-		Con_PrintLn(CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to create blend state");
+	if ( FAILED( result ) ) {
+		Con_PrintLn( CON_CHANNEL_ERROR | CON_CHANNEL_RENDER, "Unable to create blend state" );
 		return false;
 	}
 
-	return SUCCEEDED(result);
+	return SUCCEEDED( result );
 }
 
 //TODO
 XModel *s_model;
 
-void R_Init(HWND hWnd, UINT screenWidth, UINT screenHeight)
+void R_Init( HWND hWnd, UINT screenWidth, UINT screenHeight )
 {
-	R_SetupSwapChain(hWnd, screenWidth, screenHeight, false);
+	R_SetupSwapChain( hWnd, screenWidth, screenHeight, false );
 	R_SetupBackBuffer();
-	R_SetupDepthStencilBuffer(screenWidth, screenHeight);
-	R_SetupRasterizer(false);
-	R_SetupViewPort(screenWidth, screenHeight);
+	R_SetupDepthStencilBuffer( screenWidth, screenHeight );
+	R_SetupRasterizer( false );
+	R_SetupViewPort( screenWidth, screenHeight );
 	R_SetupBlending();
 
-	R_InitCamera(screenWidth, screenHeight);
+	R_InitCamera( screenWidth, screenHeight );
 
 	XModel *model;
-	XModel_LoadXModelFromFile("cube.xmodel", &model);
-	R_InitializeModel(s_d3dDevice, s_d3dDeviceContext, model);
-	model->position = XMVectorSet(-5.0f, 5.0f, 1.0f, 1.0f);
-	model->angles = XMVectorSet(0.5f, 0.0f, 0.0f, 1.0f);
-	model->scale = XMVectorSet(3.0f, 3.0f, 3.0f, 1.0f);
+	XModel_LoadXModelFromFile( "cube.xmodel", &model );
+	R_InitializeModel( s_d3dDevice, s_d3dDeviceContext, model );
+	model->position = XMVectorSet( -5.0f, 5.0f, 1.0f, 1.0f );
+	model->angles = XMVectorSet( 0.5f, 0.0f, 0.0f, 1.0f );
+	model->scale = XMVectorSet( 3.0f, 3.0f, 3.0f, 1.0f );
 
 	s_model = model;
 
-	Con_PrintLn(CON_CHANNEL_RENDER, "R_Init() complete");
+	Con_PrintLn( CON_CHANNEL_RENDER, "R_Init() complete" );
 }
 
 void R_Draw()
 {
-	R_RenderModel(s_d3dDeviceContext, s_model);
+	R_RenderModel( s_d3dDeviceContext, s_model );
 }
 
 void R_Frame()
 {
 	// clear the back buffer
 	const float clearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-	s_d3dDeviceContext->ClearRenderTargetView(s_d3dBackBufferRenderTargetView, clearColor);
+	s_d3dDeviceContext->ClearRenderTargetView( s_d3dBackBufferRenderTargetView, clearColor );
 
 	// clear the depth and stencil buffer
-	s_d3dDeviceContext->ClearDepthStencilView(s_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	s_d3dDeviceContext->ClearDepthStencilView( s_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0 );
 
 	// make all the draw calls
 	R_Draw();
 
 	// switch the back buffer and the front buffer
-	s_dxgiSwapChain->Present(1, 0);
+	s_dxgiSwapChain->Present( 1, 0 );
 
-	Con_PrintLn(CON_CHANNEL_RENDER,"R_Frame() complete");
+	Con_PrintLn( CON_CHANNEL_RENDER, "R_Frame() complete" );
 }

@@ -31,5 +31,5 @@ struct XPixelShader
 	ID3D11PixelShader *shader;
 };
 
-void R_VertexShaderInit(ID3D11Device *d3dDevice, ID3D11DeviceContext *d3dDeviceContext, const LPCWSTR vertexShaderFileName, XVertexShader *xVertexShader);
-void R_PixelShaderInit(ID3D11Device *d3dDevice, ID3D11DeviceContext *d3dDeviceContext, const LPCWSTR pixelShaderFileName, XPixelShader *xPixelShader);
+void R_VertexShaderInit( ID3D11Device *d3dDevice, ID3D11DeviceContext *d3dDeviceContext, const LPCWSTR vertexShaderFileName, XVertexShader *xVertexShader );
+void R_PixelShaderInit( ID3D11Device *d3dDevice, ID3D11DeviceContext *d3dDeviceContext, const LPCWSTR pixelShaderFileName, XPixelShader *xPixelShader );

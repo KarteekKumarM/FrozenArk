@@ -38,9 +38,9 @@ struct XML_Element
 	XML_ElementAttribute *attributes;
 };
 
-XML_TokenList* XML_Tokenize(const char *contents, unsigned int length);
-XML_Element* XML_Parse(XML_TokenList* tokenList);
-void XMl_DebugPrintTokens(XML_TokenList *tokenList);
-unsigned int XML_ReadFile(const char *filename, char **contents);
+XML_TokenList* XML_Tokenize( const char *contents, unsigned int length );
+XML_Element* XML_Parse( XML_TokenList* tokenList );
+void XMl_DebugPrintTokens( XML_TokenList *tokenList );
+unsigned int XML_ReadFile( const char *filename, char **contents );
 
-void XML_Element_Free(XML_Element **elem);
+void XML_Element_Free( XML_Element **elem );
